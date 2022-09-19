@@ -10,6 +10,7 @@ import {
 import { cLog, getColorFromTheme, isInViewport } from "./utils";
 
 function createRateBar(likes, dislikes) {
+  requestAnimationFrame(function () {
   let rateBar = document.getElementById("ryd-bar-container");
   if (!isLikesDisabled()) {
     // sometimes rate bar is hidden
@@ -23,34 +24,34 @@ function createRateBar(likes, dislikes) {
       getDislikeButton().clientWidth +
       (isRoundedDesign() ? 0 : 8);
 
-    const widthPercent =
-      likes + dislikes > 0 ? (likes / (likes + dislikes)) * 100 : 50;
+      const widthPercent =
+        likes + dislikes > 0 ? (likes / (likes + dislikes)) * 100 : 50;
 
-    var likePercentage = parseFloat(widthPercent.toFixed(1));
-    const dislikePercentage = (100 - likePercentage).toLocaleString();
-    likePercentage = likePercentage.toLocaleString();
+      var likePercentage = parseFloat(widthPercent.toFixed(1));
+      const dislikePercentage = (100 - likePercentage).toLocaleString();
+      likePercentage = likePercentage.toLocaleString();
 
-    if (extConfig.showTooltipPercentage) {
-      var tooltipInnerHTML;
-      switch (extConfig.tooltipPercentageMode) {
-        case "dash_dislike":
-          tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}&nbsp;&nbsp;-&nbsp;&nbsp;${dislikePercentage}%`;
-          break;
-        case "both":
-          tooltipInnerHTML = `${likePercentage}%&nbsp;/&nbsp;${dislikePercentage}%`;
-          break;
-        case "only_like":
-          tooltipInnerHTML = `${likePercentage}%`;
-          break;
-        case "only_dislike":
-          tooltipInnerHTML = `${dislikePercentage}%`;
-          break;
-        default: // dash_like
-          tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}&nbsp;&nbsp;-&nbsp;&nbsp;${likePercentage}%`;
+      if (extConfig.showTooltipPercentage) {
+        var tooltipInnerHTML;
+        switch (extConfig.tooltipPercentageMode) {
+          case "dash_dislike":
+            tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}&nbsp;&nbsp;-&nbsp;&nbsp;${dislikePercentage}%`;
+            break;
+          case "both":
+            tooltipInnerHTML = `${likePercentage}%&nbsp;/&nbsp;${dislikePercentage}%`;
+            break;
+          case "only_like":
+            tooltipInnerHTML = `${likePercentage}%`;
+            break;
+          case "only_dislike":
+            tooltipInnerHTML = `${dislikePercentage}%`;
+            break;
+          default: // dash_like
+            tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}&nbsp;&nbsp;-&nbsp;&nbsp;${likePercentage}%`;
+        }
+      } else {
+        tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}`;
       }
-    } else {
-      tooltipInnerHTML = `${likes.toLocaleString()}&nbsp;/&nbsp;${dislikes.toLocaleString()}`;
-    }
 
     if (!isShorts()) {
       if (!rateBar && !isMobile()) {
@@ -100,18 +101,12 @@ function createRateBar(likes, dislikes) {
               "row-reverse";
           }
         }
-      } else {
-        document.getElementById("ryd-bar-container").style.width =
-          widthPx + "px";
-        document.getElementById("ryd-bar").style.width = widthPercent + "%";
-        document.querySelector("#ryd-dislike-tooltip > #tooltip").innerHTML =
-          tooltipInnerHTML;
-        if (extConfig.coloredBar) {
-          document.getElementById("ryd-bar-container").style.backgroundColor =
-            getColorFromTheme(false);
-          document.getElementById("ryd-bar").style.backgroundColor =
-            getColorFromTheme(true);
-        }
+      }
+    } else {
+      cLog("removing bar");
+      let ratebar = document.getElementById("ryd-bar-container");
+      if (ratebar) {
+        ratebar.parentNode.removeChild(ratebar);
       }
     }
   } else {
@@ -119,7 +114,7 @@ function createRateBar(likes, dislikes) {
     if (rateBar) {
       rateBar.parentNode.removeChild(rateBar);
     }
-  }
+  });
 }
 
 export { createRateBar };

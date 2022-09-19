@@ -97,7 +97,7 @@ function isLikesDisabled() {
   // return true if the like button's text doesn't contain any number
   if (isMobile()) {
     return /^\D*$/.test(
-      getButtons().children[0].querySelector(".button-renderer-text").innerText
+      getLikeButton().querySelector(".button-renderer-text").innerText
     );
   }
   return /^\D*$/.test(getButtons().children[0].innerText);
@@ -135,6 +135,9 @@ function getState(storedData) {
 function setLikes(likesCount) {
   cLog(`SET likes ${likesCount}`)
   getLikeTextContainer().innerText = likesCount;
+  if (getLikeTextContainer().getAttribute("is-empty") !== null) {
+    getLikeTextContainer().removeAttribute('is-empty');
+  }
 }
 
 function setDislikes(dislikesCount) {
@@ -143,7 +146,7 @@ function setDislikes(dislikesCount) {
   getDislikeTextContainer()?.removeAttribute('is-empty');
   if (!isLikesDisabled()) {
     if (isMobile()) {
-      getButtons().children[1].querySelector(
+      getDislikeButton().querySelector(
         ".button-renderer-text"
       ).innerText = dislikesCount;
       return;
@@ -153,12 +156,15 @@ function setDislikes(dislikesCount) {
   } else {
     cLog("likes count disabled by creator");
     if (isMobile()) {
-      getButtons().children[1].querySelector(
+      getDislikeButton().querySelector(
         ".button-renderer-text"
       ).innerText = localize("TextLikesDisabled");
       return;
     }
     getDislikeTextContainer().innerText = localize("TextLikesDisabled");
+  }
+  if (getDislikeTextContainer().getAttribute("is-empty") !== null) {
+    getDislikeTextContainer().removeAttribute('is-empty');
   }
 }
 
