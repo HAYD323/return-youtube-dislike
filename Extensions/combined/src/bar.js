@@ -31,6 +31,13 @@ function createRateBar(likes, dislikes) {
       const dislikePercentage = (100 - likePercentage).toLocaleString();
       likePercentage = likePercentage.toLocaleString();
 
+      const button = getLikeButton();
+      const buttonRect = button.getBoundingClientRect();
+      const buttonParentRect = button.parentElement.getBoundingClientRect();
+      let relativePos = {};
+      relativePos.left = buttonRect.left - buttonParentRect.left;
+      const leftPx = relativePos.left ?? 0;
+
       if (extConfig.showTooltipPercentage) {
         var tooltipInnerHTML;
         switch (extConfig.tooltipPercentageMode) {
